@@ -69,7 +69,7 @@ export default function ExportImportComponent() {
             setError("Error: Invalid JSON format.");
           }
         } catch (err) {
-          setError("Error: Failed to parse JSON file.");
+          setError("Error: Failed to parse JSON file.",err);
         }
       };
     reader.readAsText(file);
