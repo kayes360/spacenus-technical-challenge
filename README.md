@@ -48,12 +48,12 @@ app/
 |   |-- UserPositionMarker.jsx (Geolocation marker logic)
 |-- redux/
 |   |-- mapCRUD/ (Polygon state management files)
-|       |-- actions.js
-|       |-- actionTypes.js
-|       |-- reducer.js
-|       |-- MapCRUDProvider.js
-|   |-- rootReducer.js (Root reducer for Redux)
-|   |-- store.js (Redux store setup)
+|       |-- actions.ts
+|       |-- actionTypes.ts
+|       |-- reducer.ts
+|       |-- MapCRUDProvider.ts
+|   |-- rootReducer.ts (Root reducer for Redux)
+|   |-- store.ts (Redux store setup)
 |-- styles/ (SCSS files for app styling)
 |   |-- _colors.scss (Color variables)
 |   |-- style.scss (Global styles)
