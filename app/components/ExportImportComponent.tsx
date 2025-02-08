@@ -1,15 +1,23 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    POLYGON_ADDED
-  } from "@/app/redux/mapCRUD/actionTypes";
-export default function ExportImportComponent() {
-  const mapData = useSelector((state) => state.mapData);
-  const [error, setError] = useState(null);
+import { POLYGON_ADDED } from "@/app/redux/mapCRUD/actionTypes";
+import { RootState } from "@/app/redux/store"; // Make sure this path is correct
+
+// Define interfaces for your data structures
+interface PolygonData {
+  id: number;
+  latlngs: Array<[number, number]>; // Assuming latlngs is an array of coordinate pairs
+  area: number;
+}
+
+export default function ExportImportComponent(): JSX.Element {
+  const mapData = useSelector((state: RootState) => state.mapData);
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
-  const fileInputRef = useRef(null);
-  const handleExport = () => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleExport = (): void => {
     if (mapData.length === 0) {
       setError("Error: No data to export.");
       return;
@@ -35,11 +43,15 @@ export default function ExportImportComponent() {
     a.click();
     URL.revokeObjectURL(url);
   };
-  const handleImport = () => {
-    fileInputRef.current.click();
+
+  const handleImport = (): void => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = event.target.files?.[0];
     if (!file) {
       setError("Error: No file selected.");
       return;
@@ -50,43 +62,41 @@ export default function ExportImportComponent() {
     }
 
     const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-          const importedData = JSON.parse(e.target.result);  
-          if (Array.isArray(importedData)) { 
-            const payloadData = importedData.map(item => ({
-                id: item.id,
-                latlngs: item.latlngs,
-                area: item.area,
-              }));
-              console.log('payloadData',payloadData) 
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      try {
+        const result = e.target?.result;
+        if (typeof result === 'string') {
+          const importedData = JSON.parse(result);
+          if (Array.isArray(importedData)) {
+            const payloadData: PolygonData[] = importedData.map((item: PolygonData) => ({
+              id: item.id,
+              latlngs: item.latlngs,
+              area: item.area,
+            }));
+            console.log('payloadData', payloadData);
             dispatch({
-                    type: POLYGON_ADDED,
-                    payload: payloadData,
-                  });
-            setError(null);  
+              type: POLYGON_ADDED,
+              payload: payloadData,
+            });
+            setError(null);
           } else {
             setError("Error: Invalid JSON format.");
           }
-        } catch (err) {
-          setError("Error: Failed to parse JSON file.",err);
         }
-      };
+      } catch (err) {
+        setError(`Error: Failed to parse JSON file. ${err}`);
+      }
+    };
     reader.readAsText(file);
   };
+
   return (
-    <div className="export-import-button-pair ">
+    <div className="export-import-button-pair">
       {error && <p className="text-danger">{error}</p>}
-      <button
-        onClick={handleExport}
-        className="button button-blue"
-      >
+      <button onClick={handleExport} className="button button-blue">
         Export Data
       </button>
-      <button
-        onClick={handleImport}
-        className="button button-blue"
-      >
+      <button onClick={handleImport} className="button button-blue">
         Import Data
       </button>
       <input
@@ -99,5 +109,3 @@ export default function ExportImportComponent() {
     </div>
   );
 }
-
-

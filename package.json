@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@redux-devtools/extension": "^3.3.0",
+    "@reduxjs/toolkit": "^2.5.1",
     "@turf/turf": "^7.2.0",
     "leaflet": "^1.9.4",
     "next": "14.2.18",
@@ -22,6 +23,7 @@
     "redux": "^5.0.1"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.16",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

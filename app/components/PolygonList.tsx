@@ -3,21 +3,29 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { POLYGON_COLOR_EDITED } from "@/app/redux/mapCRUD/actionTypes";
 import { HexAlphaColorPicker, HexColorInput } from "react-colorful";
+import { RootState } from "@/app/redux/store";  
+interface Polygon {
+  id: number; 
+  stroke?: string;
+  fill?: string;
+}
+ 
+type ColorType = "stroke" | "fill" | "";
 
-export default function PolygonList() {
-  const mapData = useSelector((state) => state.mapData);
+export default function PolygonList(): JSX.Element { 
+  const mapData = useSelector((state: RootState) => state.mapData);
   const dispatch = useDispatch();
 
-  const [activePolygon, setActivePolygon] = useState(null);
-  const [colorType, setColorType] = useState("");
-  const [color, setColor] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activePolygon, setActivePolygon] = useState<number | null>(null);
+  const [colorType, setColorType] = useState<ColorType>("");
+  const [color, setColor] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const filteredPolygons = mapData.filter((polygon) =>
+  const filteredPolygons = mapData.filter((polygon: Polygon) =>
     polygon.id.toString().includes(searchTerm)
   );
 
-  const applyColorChange = (polygonId) => {
+  const applyColorChange = (polygonId: number): void => {
     if (color) {
       dispatch({
         type: POLYGON_COLOR_EDITED,
@@ -31,15 +39,15 @@ export default function PolygonList() {
     }
   };
 
-  const resetState = () => {
+  const resetState = (): void => {
     setActivePolygon(null);
     setColor("");
     setColorType("");
   };
 
   return (
-    <div className="list-wrapper ">
-      <h2 className="list-title  ">Polygon List</h2>
+    <div className="list-wrapper">
+      <h2 className="list-title">Polygon List</h2>
 
       {/* Search Bar */}
       {mapData.length > 0 && (
@@ -47,8 +55,10 @@ export default function PolygonList() {
           type="text"
           placeholder="Search by Polygon ID"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className=" search-input"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+            setSearchTerm(e.target.value)
+          }
+          className="search-input"
         />
       )}
 
@@ -60,11 +70,11 @@ export default function PolygonList() {
         </p>
       ) : (
         <ul className="list-data-wrapper">
-          {filteredPolygons.map((polygon) => (
+          {filteredPolygons.map((polygon: Polygon) => (
             <li key={polygon.id} className="list-item">
               <span>Polygon ID: {polygon.id}</span>
-              <div className="  list-item-button-container">
-                <div className="list-item-button-wrapper  ">
+              <div className="list-item-button-container">
+                <div className="list-item-button-wrapper">
                   <button
                     onClick={() => {
                       setActivePolygon(polygon.id);

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local"; 
-import MapCRUDProvider from "@/app/redux/MapCRUDProvider";
+import localFont from "next/font/local";  
 import './styles/style.scss'
+import MapCRUDProvider from "./redux/MapCRUDProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
